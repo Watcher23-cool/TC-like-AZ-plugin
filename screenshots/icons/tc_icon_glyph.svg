@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect x="24" y="24" width="464" height="464" rx="96" fill="#0f1a2a"/>
+  <rect x="104" y="118" width="304" height="276" rx="24" fill="#14243a" stroke="#4e8de6" stroke-width="8"/>
+  <rect x="248" y="118" width="16" height="276" rx="8" fill="#7ab5ff"/>
+  <path d="M128 140h70l16 16h-86z" fill="#ffc85a"/>
+  <path d="M296 140h70l16 16h-86z" fill="#ffc85a"/>
+  <text x="256" y="304" text-anchor="middle" fill="#e8f3ff" font-family="Arial, sans-serif" font-size="88" font-weight="800">TC</text>
+</svg>

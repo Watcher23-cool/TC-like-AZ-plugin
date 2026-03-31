@@ -1,0 +1,13 @@
+<div x-data>
+  <button
+    class="config-button"
+    id="total-commander"
+    x-move-after=".config-button#dashboard"
+    title="Open Total Commander"
+    style="display:flex;align-items:center;gap:8px;"
+    @click="$store.totalCommander && $store.totalCommander.show()"
+  >
+    <img src="/plugins/total_commander_plugin/screenshots/icons/tc_icon_dualpane_256.png" alt="TC" style="width:18px;height:18px;border-radius:4px;object-fit:contain;" />
+    <span>Total Commander</span>
+  </button>
+</div>

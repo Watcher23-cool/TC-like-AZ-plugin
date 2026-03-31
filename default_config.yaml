@@ -1,0 +1,3 @@
+default_left_path: /a0/usr/projects
+default_right_path: /a0/usr
+read_text_max_bytes: 1048576

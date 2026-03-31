@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1b2536"/>
+      <stop offset="100%" stop-color="#0f1522"/>
+    </linearGradient>
+    <linearGradient id="pane" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1f2f4a"/>
+      <stop offset="100%" stop-color="#17243a"/>
+    </linearGradient>
+  </defs>
+  <rect x="24" y="24" width="464" height="464" rx="84" fill="url(#bg)"/>
+  <rect x="74" y="98" width="364" height="316" rx="24" fill="#0a101a" stroke="#2f4f7a" stroke-width="6"/>
+  <rect x="90" y="118" width="164" height="276" rx="14" fill="url(#pane)" stroke="#3f6fb2" stroke-width="3"/>
+  <rect x="258" y="118" width="164" height="276" rx="14" fill="url(#pane)" stroke="#3f6fb2" stroke-width="3"/>
+  <rect x="250" y="116" width="12" height="280" rx="6" fill="#5ca0ff"/>
+  <g fill="#8ec1ff" opacity="0.95">
+    <rect x="106" y="150" width="132" height="10" rx="5"/>
+    <rect x="106" y="176" width="110" height="10" rx="5"/>
+    <rect x="106" y="202" width="124" height="10" rx="5"/>
+    <rect x="274" y="150" width="132" height="10" rx="5"/>
+    <rect x="274" y="176" width="110" height="10" rx="5"/>
+    <rect x="274" y="202" width="124" height="10" rx="5"/>
+  </g>
+  <path d="M126 114h70l16 18h-86z" fill="#ffd26e"/>
+  <path d="M294 114h70l16 18h-86z" fill="#ffd26e"/>
+  <text x="256" y="446" text-anchor="middle" fill="#d7e9ff" font-family="Arial, sans-serif" font-size="42" font-weight="700">TC</text>
+</svg>

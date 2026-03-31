@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect x="24" y="24" width="464" height="464" rx="84" fill="#101723"/>
+  <rect x="76" y="90" width="360" height="332" rx="26" fill="#0d1320" stroke="#2d466e" stroke-width="6"/>
+  <rect x="98" y="112" width="150" height="288" rx="16" fill="#1a2a43"/>
+  <rect x="264" y="112" width="150" height="288" rx="16" fill="#1a2a43"/>
+  <path d="M223 252h66" stroke="#79b2ff" stroke-width="16" stroke-linecap="round"/>
+  <path d="M206 252l20-16v32z" fill="#79b2ff"/>
+  <path d="M306 252l-20-16v32z" fill="#79b2ff"/>
+  <circle cx="156" cy="156" r="12" fill="#ffd06a"/>
+  <circle cx="322" cy="156" r="12" fill="#ffd06a"/>
+  <text x="256" y="448" text-anchor="middle" fill="#cfe4ff" font-family="Arial, sans-serif" font-size="38" font-weight="700">Commander</text>
+</svg>

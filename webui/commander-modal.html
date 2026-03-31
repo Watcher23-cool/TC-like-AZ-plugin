@@ -1,0 +1,457 @@
+<html class="tc-modal-host">
+<head>
+  <script type="module" src="/plugins/total_commander_plugin/webui/commander-store.js"></script>
+</head>
+<body>
+  <div x-data @keydown.window="$store.totalCommander && $store.totalCommander.handleKeydown($event)">
+    <template x-if="$store.totalCommander">
+      <div class="tc-root"
+           x-init="$store.totalCommander.init(); $store.totalCommander.onOpen($el)"
+           x-destroy="$store.totalCommander.onClose()"
+           :style="$store.totalCommander.getWindowStyle()">
+
+        <div class="tc-topbar">
+          <div class="tc-title">
+            <span class="material-symbols-outlined">folder_managed</span>
+            <strong>Total Commander</strong>
+          </div>
+          <div class="tc-actions">
+            <button class="tc-btn" @click="$store.totalCommander.refreshBoth()" title="Ctrl+R">Refresh</button>
+            <button class="tc-btn" @click="$store.totalCommander.createFolder($store.totalCommander.activePane)" title="F7">New Folder</button>
+            <button class="tc-btn" @click="$store.totalCommander.createFile($store.totalCommander.activePane)" title="Ctrl+N">New File</button>
+            <button class="tc-btn" @click="$store.totalCommander.renameSelected($store.totalCommander.activePane)" title="F2">Rename</button>
+            <button class="tc-btn" @click="$store.totalCommander.maximizeWindow()" title="Maximize modal">Maximize</button>
+            <button class="tc-btn" @click="$store.totalCommander.resetWindowSize()" title="Reset size">Reset Size</button>
+            <button class="tc-btn" @click="$store.totalCommander.hide()" title="Esc">Close</button>
+          </div>
+        </div>
+
+        <div class="tc-shortcuts">
+          Tab switch pane · Enter open · Backspace parent · F3 view · F4 edit · F5 copy · F6 move · F7 mkdir · F8 delete · Alt+F5 compress · Alt+F6 extract
+        </div>
+
+        <div class="tc-panels">
+          <div class="tc-pane"
+               :class="{ active: $store.totalCommander.activePane === 'left' }"
+               @mousedown="$store.totalCommander.setActive('left')">
+
+            <div class="tc-pane-head">
+              <span class="tc-pane-label">LEFT</span>
+              <input class="tc-path-input"
+                     x-model="$store.totalCommander.left.inputPath"
+                     @keydown.enter.prevent="$store.totalCommander.goPath('left')" />
+              <button class="tc-btn" @click="$store.totalCommander.goPath('left')">Go</button>
+              <button class="tc-btn" @click="$store.totalCommander.goParent('left')">↑</button>
+            </div>
+
+            <div class="tc-list-wrap">
+              <div class="tc-row tc-row-parent" @dblclick="$store.totalCommander.goParent('left')">
+                <span class="tc-col-name">[..]</span>
+                <span class="tc-col-size"></span>
+                <span class="tc-col-date"></span>
+              </div>
+
+              <template x-for="(entry, idx) in $store.totalCommander.left.entries" :key="entry.path">
+                <div class="tc-row"
+                     :class="{ selected: $store.totalCommander.isSelected('left', entry.name), dir: entry.is_dir }"
+                     @click="$store.totalCommander.rowClick('left', idx, $event)"
+                     @dblclick="$store.totalCommander.openEntry('left', idx)">
+                  <span class="tc-col-name">
+                    <span x-text="entry.is_dir ? '📁' : (entry.is_archive ? '🗜️' : '📄')"></span>
+                    <span x-text="entry.name"></span>
+                  </span>
+                  <span class="tc-col-size" x-text="entry.is_dir ? 'DIR' : $store.totalCommander.formatSize(entry.size)"></span>
+                  <span class="tc-col-date" x-text="$store.totalCommander.formatDate(entry.mtime)"></span>
+                </div>
+              </template>
+            </div>
+
+            <div class="tc-status">
+              <span x-text="$store.totalCommander.left.cwd"></span>
+              <span x-text="$store.totalCommander.selectionLabel('left')"></span>
+            </div>
+          </div>
+
+          <div class="tc-pane"
+               :class="{ active: $store.totalCommander.activePane === 'right' }"
+               @mousedown="$store.totalCommander.setActive('right')">
+
+            <div class="tc-pane-head">
+              <span class="tc-pane-label">RIGHT</span>
+              <input class="tc-path-input"
+                     x-model="$store.totalCommander.right.inputPath"
+                     @keydown.enter.prevent="$store.totalCommander.goPath('right')" />
+              <button class="tc-btn" @click="$store.totalCommander.goPath('right')">Go</button>
+              <button class="tc-btn" @click="$store.totalCommander.goParent('right')">↑</button>
+            </div>
+
+            <div class="tc-list-wrap">
+              <div class="tc-row tc-row-parent" @dblclick="$store.totalCommander.goParent('right')">
+                <span class="tc-col-name">[..]</span>
+                <span class="tc-col-size"></span>
+                <span class="tc-col-date"></span>
+              </div>
+
+              <template x-for="(entry, idx) in $store.totalCommander.right.entries" :key="entry.path">
+                <div class="tc-row"
+                     :class="{ selected: $store.totalCommander.isSelected('right', entry.name), dir: entry.is_dir }"
+                     @click="$store.totalCommander.rowClick('right', idx, $event)"
+                     @dblclick="$store.totalCommander.openEntry('right', idx)">
+                  <span class="tc-col-name">
+                    <span x-text="entry.is_dir ? '📁' : (entry.is_archive ? '🗜️' : '📄')"></span>
+                    <span x-text="entry.name"></span>
+                  </span>
+                  <span class="tc-col-size" x-text="entry.is_dir ? 'DIR' : $store.totalCommander.formatSize(entry.size)"></span>
+                  <span class="tc-col-date" x-text="$store.totalCommander.formatDate(entry.mtime)"></span>
+                </div>
+              </template>
+            </div>
+
+            <div class="tc-status">
+              <span x-text="$store.totalCommander.right.cwd"></span>
+              <span x-text="$store.totalCommander.selectionLabel('right')"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tc-bottom-actions">
+          <button class="tc-btn" @click="$store.totalCommander.copySelected($store.totalCommander.activePane)">F5 Copy →</button>
+          <button class="tc-btn" @click="$store.totalCommander.moveSelected($store.totalCommander.activePane)">F6 Move →</button>
+          <button class="tc-btn" @click="$store.totalCommander.deleteSelected($store.totalCommander.activePane)">F8 Delete</button>
+          <button class="tc-btn" @click="$store.totalCommander.viewSelected($store.totalCommander.activePane)">F3 View</button>
+          <button class="tc-btn" @click="$store.totalCommander.editSelected($store.totalCommander.activePane)">F4 Edit</button>
+          <button class="tc-btn" @click="$store.totalCommander.compressSelected($store.totalCommander.activePane)">Alt+F5 Compress</button>
+          <button class="tc-btn" @click="$store.totalCommander.extractSelected($store.totalCommander.activePane)">Alt+F6 Extract</button>
+        </div>
+
+
+        <div class="tc-resize-handle tc-resize-e"
+             @mousedown="$store.totalCommander.startResize($event, 'e')"
+             title="Resize width"></div>
+        <div class="tc-resize-handle tc-resize-s"
+             @mousedown="$store.totalCommander.startResize($event, 's')"
+             title="Resize height"></div>
+        <div class="tc-resize-handle tc-resize-se"
+             @mousedown="$store.totalCommander.startResize($event, 'se')"
+             title="Resize window"></div>
+
+        <template x-if="$store.totalCommander.editor.open">
+          <div class="tc-editor-overlay">
+            <div class="tc-editor-modal">
+              <div class="tc-editor-head">
+                <strong x-text="$store.totalCommander.editor.path"></strong>
+                <div class="tc-actions">
+                  <button class="tc-btn"
+                          x-show="!$store.totalCommander.editor.viewOnly"
+                          @click="$store.totalCommander.saveEditor()"
+                          title="Ctrl+S">Save</button>
+                  <button class="tc-btn" @click="$store.totalCommander.closeEditor()">Close</button>
+                </div>
+              </div>
+
+              <template x-if="$store.totalCommander.editor.truncated">
+                <div class="tc-editor-warning">Preview truncated to 1MB.</div>
+              </template>
+
+              <textarea class="tc-editor-text"
+                        x-model="$store.totalCommander.editor.content"
+                        :readonly="$store.totalCommander.editor.viewOnly"></textarea>
+            </div>
+          </div>
+        </template>
+      </div>
+    </template>
+  </div>
+
+  <style>
+    .modal-inner.tc-modal-host {
+      width: min(98vw, 1780px) !important;
+      max-width: calc(100vw - 20px) !important;
+      height: min(94vh, 980px) !important;
+      max-height: calc(100vh - 20px) !important;
+      border-radius: 10px;
+    }
+
+    .modal-inner.tc-modal-host .modal-scroll {
+      flex: 1;
+      min-height: 0;
+      max-height: none;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .modal-inner.tc-modal-host .modal-bd {
+      height: 100%;
+    }
+
+    .tc-root {
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      min-width: min(1080px, calc(100vw - 20px));
+      min-height: min(620px, calc(100vh - 20px));
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 10px;
+      position: relative;
+      overflow: hidden;
+      background: var(--color-panel, #121212);
+      color: var(--color-text, #e8e8e8);
+      border: 1px solid var(--color-border, #343434);
+      border-radius: 10px;
+      box-shadow: 0 8px 26px rgba(0, 0, 0, 0.35);
+    }
+
+    .tc-topbar,
+    .tc-pane-head,
+    .tc-status,
+    .tc-bottom-actions,
+    .tc-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tc-topbar {
+      justify-content: space-between;
+      border-bottom: 1px solid var(--color-border, #343434);
+      padding-bottom: 8px;
+    }
+
+    .tc-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 1rem;
+    }
+
+    .tc-shortcuts {
+      font-size: 0.8rem;
+      opacity: 0.85;
+      border: 1px dashed var(--color-border, #343434);
+      border-radius: 6px;
+      padding: 6px 8px;
+    }
+
+    .tc-btn {
+      border: 1px solid var(--color-border, #505050);
+      background: var(--color-background-secondary, #1f1f1f);
+      color: var(--color-text, #e8e8e8);
+      border-radius: 6px;
+      padding: 5px 9px;
+      cursor: pointer;
+      font-size: 0.84rem;
+    }
+
+    .tc-btn:hover {
+      filter: brightness(1.08);
+    }
+
+    .tc-panels {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .tc-pane {
+      border: 1px solid var(--color-border, #343434);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      background: var(--color-background-secondary, #181818);
+    }
+
+    .tc-pane.active {
+      box-shadow: inset 0 0 0 1px #3f8cff;
+    }
+
+    .tc-pane-head {
+      padding: 6px;
+      border-bottom: 1px solid var(--color-border, #343434);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .tc-pane-label {
+      font-weight: 700;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      min-width: 48px;
+      color: #7fb0ff;
+    }
+
+    .tc-path-input {
+      flex: 1;
+      min-width: 0;
+      border: 1px solid var(--color-border, #555);
+      border-radius: 6px;
+      padding: 6px 8px;
+      background: var(--color-panel, #121212);
+      color: var(--color-text, #e8e8e8);
+      font-size: 0.84rem;
+    }
+
+    .tc-list-wrap {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.82rem;
+    }
+
+    .tc-row {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) 92px 170px;
+      gap: 10px;
+      align-items: center;
+      padding: 4px 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      cursor: default;
+      user-select: none;
+    }
+
+    .tc-row:hover {
+      background: rgba(127, 176, 255, 0.10);
+    }
+
+    .tc-row.selected {
+      background: rgba(127, 176, 255, 0.22);
+    }
+
+    .tc-row-parent {
+      font-weight: 700;
+      opacity: 0.92;
+    }
+
+    .tc-col-name {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .tc-col-size,
+    .tc-col-date {
+      text-align: right;
+      opacity: 0.9;
+      white-space: nowrap;
+    }
+
+    .tc-status {
+      justify-content: space-between;
+      font-size: 0.74rem;
+      padding: 6px 8px;
+      border-top: 1px solid var(--color-border, #343434);
+      opacity: 0.9;
+      gap: 12px;
+    }
+
+    .tc-bottom-actions {
+      flex-wrap: wrap;
+      border-top: 1px solid var(--color-border, #343434);
+      padding-top: 8px;
+    }
+
+
+    .tc-resize-handle {
+      position: absolute;
+      z-index: 35;
+      user-select: none;
+      -webkit-user-select: none;
+      background: transparent;
+    }
+
+    .tc-resize-handle.tc-resize-e {
+      top: 0;
+      right: 0;
+      width: 9px;
+      height: calc(100% - 12px);
+      cursor: ew-resize;
+    }
+
+    .tc-resize-handle.tc-resize-s {
+      left: 0;
+      bottom: 0;
+      width: calc(100% - 12px);
+      height: 9px;
+      cursor: ns-resize;
+    }
+
+    .tc-resize-handle.tc-resize-se {
+      right: 0;
+      bottom: 0;
+      width: 16px;
+      height: 16px;
+      cursor: nwse-resize;
+      background:
+        linear-gradient(135deg, transparent 0%, transparent 48%, rgba(127, 176, 255, 0.85) 49%, rgba(127, 176, 255, 0.85) 56%, transparent 57%, transparent 100%);
+      opacity: 0.95;
+    }
+
+    .tc-editor-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 4000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .tc-editor-modal {
+      width: min(96vw, 1200px);
+      height: min(90vh, 860px);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: var(--color-panel, #121212);
+      border: 1px solid var(--color-border, #343434);
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .tc-editor-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.86rem;
+      border-bottom: 1px solid var(--color-border, #343434);
+      padding-bottom: 8px;
+    }
+
+    .tc-editor-warning {
+      padding: 6px 8px;
+      border: 1px solid #9a6c1f;
+      border-radius: 6px;
+      color: #ffd88f;
+      background: rgba(154, 108, 31, 0.18);
+      font-size: 0.82rem;
+    }
+
+    .tc-editor-text {
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      border: 1px solid var(--color-border, #555);
+      border-radius: 6px;
+      background: #101114;
+      color: #e6e6e6;
+      padding: 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.82rem;
+      line-height: 1.4;
+      resize: none;
+    }
+  </style>
+</body>
+</html>
